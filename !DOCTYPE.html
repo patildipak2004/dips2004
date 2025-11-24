@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Cloud Firestore Example</title>
+
+  <!-- Firebase libraries -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <h1>🌩️ Firebase Cloud Database</h1>
+
+  <input id="nameInput" placeholder="Enter your name">
+  <button onclick="addData()">Add</button>
+
+  <h2>Stored Data:</h2>
+  <ul id="dataList"></ul>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0SPpPAz6ScDn_sv2ya2_k84wxqEKBvXY",
+      authDomain: "dips2004.firebaseapp.com",
+      projectId: "dips2004",
+      storageBucket: "dips2004.firebasestorage.app",
+      messagingSenderId: "517692584426",
+      appId: "1:517692584426:web:d81ac385cc4d5e49df8293",
+      measurementId: "G-LL6WYW882E"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function addData() {
+      const name = document.getElementById("nameInput").value;
+
+      if (!name) {
+        alert("Please enter a name.");
+        return;
+      }
+
+      db.collection("users")
+        .add({
+          name: name,
+          timestamp: new Date()
+        })
+        .then(() => {
+          alert("Data added!");
+          document.getElementById("nameInput").value = "";
+          getData();
+        })
+        .catch((error) => {
+          console.log("ERROR:", error);
+        });
+    }
+
+    function getData() {
+      const list = document.getElementById("dataList");
+      list.innerHTML = "";
+
+      db.collection("users")
+        .orderBy("timestamp", "desc")
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            const li = document.createElement("li");
+            li.textContent = doc.data().name;
+            list.appendChild(li);
+          });
+        });
+    }
+
+    getData();
+  </script>
+</body>
+</html>
