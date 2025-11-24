@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student Registration Form</title>
+  <style>
+    :root{
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --accent: #3b82f6; /* blue */
+      --muted: #6b7280;
+      --danger: #ef4444;
+      --shadow: 0 8px 24px rgba(16,24,40,0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(180deg, var(--bg), #eef2ff 100%);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      color:#111827;
+    }
+
+    .container{
+      width:100%;
+      max-width:920px;
+      background:var(--card);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:0;
+    }
+
+    @media (max-width:900px){
+      .container{grid-template-columns:1fr}
+    }
+
+    .left{
+      padding:28px 32px;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-bottom:18px;
+    }
+    .logo{
+      width:48px;height:48px;border-radius:10px;
+      background:linear-gradient(135deg,#4f46e5,#06b6d4);
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;
+      box-shadow:0 6px 18px rgba(99,102,241,0.18);
+    }
+
+    h1{font-size:20px;margin:0 0 6px}
+    p.lead{margin:0;color:var(--muted);font-size:14px}
+
+    form{margin-top:18px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    @media (max-width:700px){ form{grid-template-columns:1fr} }
+
+    label{display:block;font-size:13px;margin-bottom:6px;color:#111827}
+    .input, .select, .textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid #e6e9ef;
+      background:white;
+      font-size:14px;
+      outline:none;
+      transition:box-shadow .12s, border-color .12s;
+    }
+    .input:focus, .select:focus, .textarea:focus{
+      border-color:var(--accent);
+      box-shadow:0 6px 18px rgba(59,130,246,0.12);
+    }
+
+    .full{grid-column:1/-1}
+    .small{font-size:13px;color:var(--muted);margin-top:6px}
+
+    .row-inline{
+      display:flex;gap:10px;align-items:center;
+    }
+
+    .radio-group{display:flex;gap:12px;align-items:center}
+    input[type="radio"]{transform:scale(1.02)}
+
+    .file-wrapper{
+      display:flex;gap:12px;align-items:center;
+    }
+    .img-preview{
+      width:72px;height:72px;border-radius:8px;border:1px dashed #e6e9ef;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);
+      background:linear-gradient(180deg, #ffffff, #fbfdff);
+      overflow:hidden;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      align-items:center;
+      margin-top:6px;
+      grid-column:1/-1;
+    }
+
+    button {
+      padding:10px 16px;border-radius:10px;border:0;font-weight:600;cursor:pointer;
+    }
+    .btn-primary{background:var(--accent);color:white;box-shadow:0 8px 20px rgba(59,130,246,0.18)}
+    .btn-ghost{background:transparent;border:1px solid #e6e9ef;color:var(--muted)}
+
+    .right{
+      background:linear-gradient(180deg,#fafbff,#ffffff);
+      padding:28px;
+      border-left:1px solid #f3f4f6;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-width:260px;
+    }
+    @media (max-width:900px){ .right{order:-1} }
+
+    .help{font-size:13px;color:var(--muted)}
+    .stat{background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:10px;border:1px solid #eef2ff;box-shadow:0 6px 16px rgba(99,102,241,0.04)}
+    .error{color:var(--danger);font-size:13px;margin-top:6px}
+
+    footer.note{font-size:12px;color:var(--muted);margin-top:12px}
+
+    /* success toast */
+    .toast{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      background:#0f172a;color:white;padding:12px 16px;border-radius:10px;box-shadow:0 12px 36px rgba(2,6,23,0.4);display:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-labelledby="title">
+    <div class="left">
+      <div class="brand" aria-hidden="true">
+        <div class="logo">SR</div>
+        <div>
+          <h1 id="title">Student Registration</h1>
+          <p class="lead">Quick form to register a new student — required fields are marked *</p>
+        </div>
+      </div>
+
+      <form id="regForm" novalidate>
+        <div class="full" aria-hidden="true" style="display:flex;gap:12px;align-items:center;">
+          <div style="flex:1">
+            <label for="firstName">First name *</label>
+            <input id="firstName" name="firstName" class="input" type="text" placeholder="Rahul" required minlength="2" />
+            <div class="small">Minimum 2 characters.</div>
+          </div>
+          <div style="width:150px">
+            <label for="lastName">Last name</label>
+            <input id="lastName" name="lastName" class="input" type="text" placeholder="Patil" />
+          </div>
+        </div>
+
+        <div>
+          <label for="email">Email address *</label>
+          <input id="email" name="email" class="input" type="email" placeholder="name@example.com" required />
+        </div>
+
+        <div>
+          <label for="phone">Phone number *</label>
+          <input id="phone" name="phone" class="input" type="tel" placeholder="+91 9876543210" pattern="^\+?[0-9\s\-]{7,20}$" required />
+          <div class="small">Include country code if available. Only numbers, spaces and - allowed.</div>
+        </div>
+
+        <div>
+          <label for="dob">Date of birth *</label>
+          <input id="dob" name="dob" class="input" type="date" required
+                 max="" />
+          <div class="small">Students must be at least 10 years old.</div>
+        </div>
+
+        <div>
+          <label for="gender">Gender</label>
+          <div class="radio-group" id="gender" role="radiogroup" aria-label="Gender">
+            <label><input type="radio" name="gender" value="Male" /> Male</label>
+            <label><input type="radio" name="gender" value="Female" /> Female</label>
+            <label><input type="radio" name="gender" value="Other" /> Other</label>
+          </div>
+        </div>
+
+        <div>
+          <label for="course">Course *</label>
+          <select id="course" name="course" class="select" required>
+            <option value="">— Select course —</option>
+            <option>Computer Science</option>
+            <option>Electronics</option>
+            <option>Mechanical</option>
+            <option>Commerce</option>
+            <option>Arts</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="year">Year / Grade *</label>
+          <select id="year" name="year" class="select" required>
+            <option value="">— Select year —</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+          </select>
+        </div>
+
+        <div class="full">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" class="textarea" rows="3" placeholder="Street, City, State, PIN"></textarea>
+        </div>
+
+        <div>
+          <label for="password">Password *</label>
+          <input id="password" name="password" class="input" type="password" minlength="6" required placeholder="At least 6 characters" />
+        </div>
+
+        <div>
+          <label for="confirmPassword">Confirm password *</label>
+          <input id="confirmPassword" name="confirmPassword" class="input" type="password" minlength="6" required />
+          <div id="pwError" class="error" aria-live="polite" style="display:none">Passwords do not match.</div>
+        </div>
+
+        <div>
+          <label for="photo">Photo (optional)</label>
+          <div class="file-wrapper">
+            <input id="photo" name="photo" class="input" type="file" accept="image/*" />
+            <div class="img-preview" id="imgPreview">Preview</div>
+          </div>
+        </div>
+
+        <div class="full actions">
+          <button type="reset" class="btn-ghost">Reset</button>
+          <button type="submit" class="btn-primary">Register student</button>
+        </div>
+      </form>
+
+      <footer class="note">By submitting you confirm the information is accurate.</footer>
+    </div>
+
+    <aside class="right" aria-label="Sidebar help">
+      <div>
+        <strong>Form tips</strong>
+        <p class="help">Use a real email and phone so we can contact the student. Password should be at least 6 characters.</p>
+      </div>
+
+      <div class="stat">
+        <strong>Enrollment checklist</strong>
+        <ul style="margin:8px 0 0 16px;color:var(--muted);">
+          <li>ID proof copy (upload later)</li>
+          <li>Fee payment receipt</li>
+          <li>Parent/guardian contact</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:auto">
+        <small style="color:var(--muted)">Need this in another format? Save this page as PDF from the browser print dialog.</small>
+      </div>
+    </aside>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Registration successful</div>
+
+  <script>
+    // set max DOB to today minus 10 years (students must be >=10)
+    (function(){
+      const dob = document.getElementById('dob');
+      const today = new Date();
+      const minYear = today.getFullYear() - 100; // optional lower bound
+      const maxDate = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+      function toISO(d){ return d.toISOString().split('T')[0]; }
+      dob.setAttribute('max', toISO(maxDate));
+      dob.setAttribute('min', toISO(new Date(minYear,0,1)));
+    })();
+
+    // image preview
+    const photo = document.getElementById('photo');
+    const imgPreview = document.getElementById('imgPreview');
+    photo.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if(!file){ imgPreview.textContent = 'Preview'; imgPreview.style.backgroundImage = ''; return; }
+      if(!file.type.startsWith('image/')) { imgPreview.textContent = 'Not an image'; return; }
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        imgPreview.style.backgroundImage = `url(${ev.target.result})`;
+        imgPreview.style.backgroundSize = 'cover';
+        imgPreview.textContent = '';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // client-side validation + password match + simulated submit
+    const form = document.getElementById('regForm');
+    const pw = document.getElementById('password');
+    const cpw = document.getElementById('confirmPassword');
+    const pwError = document.getElementById('pwError');
+    const toast = document.getElementById('toast');
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.style.display = 'block';
+      setTimeout(()=> { toast.style.display = 'none'; }, 3200);
+    }
+
+    form.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      pwError.style.display = 'none';
+
+      // basic HTML validity
+      if(!form.checkValidity()){
+        // let browser show native messages
+        form.reportValidity();
+        return;
+      }
+
+      // password match check
+      if(pw.value !== cpw.value){
+        pwError.style.display = 'block';
+        cpw.focus();
+        return;
+      }
+
+      // collect data (demo) - NOTE: file is not uploaded here, this is only demo
+      const formData = new FormData(form);
+      const obj = {};
+      for(const [k,v] of formData.entries()){
+        if(v instanceof File){
+          obj[k] = v.name || '';
+        } else {
+          obj[k] = v;
+        }
+      }
+
+      // In a real app send `formData` via fetch to backend.
+      console.log('Form submitted (demo):', obj);
+
+      showToast('Registration successful ✓');
+
+      // optional: reset after success
+      form.reset();
+      imgPreview.style.backgroundImage = '';
+      imgPreview.textContent = 'Preview';
+    });
+  </script>
+</body>
+</html>
